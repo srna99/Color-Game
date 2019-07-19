@@ -4,7 +4,7 @@ import random
 
 class ColorGame:
 
-    colors = ["Red", "Yellow", "Orange", "Green", "Blue", "Purple", "Black", "Brown", "Pink", "Gray"]
+    colors = ["Red", "Yellow", "Orange", "Green", "Blue", "Purple", "Black", "White", "Pink", "Gray"]
     time_left = 30
     score = 0
 
@@ -47,23 +47,17 @@ class ColorGame:
         self.change_color()
 
     def change_color(self):
+        self.check_answer()
 
-        random_color = self.colors[random.randint(0, len(self.colors)-1)]
-        random_color_text = self.colors[random.randint(0, len(self.colors)-1)]
+        random.shuffle(self.colors)
 
-        self.color_text_label.config(fg=random_color, text=random_color_text)
+        self.color_text_label.config(fg=self.colors[0], text=self.colors[1])
         self.color_text_label.pack(pady=13)
 
-        self.check_answer(random_color)
+    def check_answer(self):
 
-    def check_answer(self, correct_color):
-
-        global score
-
-        if self.textfield.get().lower() == correct_color.lower():
-
+        if self.textfield.get().lower() == self.colors[0].lower():
             self.score += 1
-            print(self.score)
             self.score_label.config(text="Score: " + str(self.score))
 
         self.textfield.delete(0, tkinter.END)
