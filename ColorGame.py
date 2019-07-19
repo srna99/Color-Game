@@ -27,7 +27,10 @@ class ColorGame:
 
         self.color_text_label = tkinter.Label(window, fg=self.colors[0], text="Color", font=("Times", 40))
 
-        self.textfield = tkinter.Entry(window, font=("Arial", 14))
+        self.entry = tkinter.Entry(window, font=("Arial", 14))
+
+        self.play_again_button = tkinter.Button(window, text="Play Again", font=("Arial", 14), padx=3,
+            pady=3, background="Green", fg="White", command=self.restart)
 
         window.bind("<Return>", self.play_game)
 
@@ -37,14 +40,19 @@ class ColorGame:
         self.score_label.pack()
         self.time_label.pack()
         self.color_text_label.pack()
-        self.textfield.pack(fill="x", padx=100)
+        self.entry.pack(fill="x", padx=100)
 
-        self.textfield.focus_set()
+        if self.time_left > 0:
+            self.entry.focus_set()
 
-        # if self.time_label == 30:
-        #     self.countdown()
+            if self.time_left == 30:
+                self.countdown()
 
-        self.change_color()
+            self.change_color()
+        else:
+            self.color_text_label.pack_forget()
+            self.entry.pack_forget()
+            self.play_again_button.pack(pady=10)
 
     def change_color(self):
         self.check_answer()
@@ -56,15 +64,34 @@ class ColorGame:
 
     def check_answer(self):
 
-        if self.textfield.get().lower() == self.colors[0].lower():
+        if self.entry.get().lower() == self.colors[0].lower():
             self.score += 1
             self.score_label.config(text="Score: " + str(self.score))
 
-        self.textfield.delete(0, tkinter.END)
+        self.entry.delete(0, tkinter.END)
 
     def countdown(self):
 
-        pass
+        if self.time_left > 0:
+            self.time_left -= 1
+
+            self.time_label.config(text="Time Left: " + str(self.time_left))
+
+            self.time_label.after(1000, self.countdown)
+
+    def restart(self):
+
+        self.score = 0
+        self.time_left = 30
+
+        self.score_label.config(text="Score: 0")
+        self.time_label.config(text="Time Left: " + str(self.time_left))
+
+        self.play_again_button.pack_forget()
+        self.score_label.pack_forget()
+        self.time_label.pack_forget()
+
+        self.start_label.pack()
 
 
 # -- Main Driver Code --
